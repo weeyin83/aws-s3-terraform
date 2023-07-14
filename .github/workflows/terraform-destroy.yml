@@ -27,12 +27,6 @@ jobs:
           echo `pwd`
           echo "** Running Terraform Init**"
           terraform init
-
-          echo "** Running Terraform Validate**"
-          terraform validate
-
-          echo "** Running Terraform Plan**"
-          terraform plan
           
-          echo "** Running Terraform Apply**"
+          echo "** Running Terraform Destroy**"
           terraform destroy -auto-approve
