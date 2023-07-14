@@ -26,38 +26,17 @@ jobs:
       - name: Initialize Terraform
         run: terraform init
 
-      - name: Apply Terraform changes
-        run: terraform apply -auto-approve
+      - name: Apply Terraform plan
+        run: terraform plan
 
-      - name: Request approval
-        uses: actions/github-script@v4
+      - name: Get approval
+        id: approval
+        uses: "marvinpinto/action-inquirer@v1.2.0"
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { data: pullRequest } = await github.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'Terraform Deployment Approval',
-              head: context.sha,
-              base: 'main',
-              body: 'Please review and approve the Terraform deployment.',
-            });
-            core.setOutput('pull_request_number', pullRequest.number)
+          question: "Do you approve the Terraform plan?"
+          options: "Approve,Reject"
+          default: "Reject"
 
-  approval:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Approve Terraform deployment
-        uses: peter-evans/approval@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          pull-request-number: ${{ needs.deploy.outputs.pull_request_number }}
-          approval-context: 'Terraform Deployment'
-
-      - name: Deploy Terraform changes
-        if: ${{ needs.approval.outputs.approved == 'true' }}
+      - name: Deploy if approved
+        if: ${{ steps.approval.outputs.answer == 'Approve' }}
         run: terraform apply -auto-approve
