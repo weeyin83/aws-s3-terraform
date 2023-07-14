@@ -30,12 +30,6 @@ jobs:
       - name: Apply Terraform plan
         run: terraform plan -out=tfplan
       
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: tfplan
-          path: tfplan
-      
       - name: Approval
         uses: trstringer/manual-approval@v1
         with:
