@@ -8,7 +8,7 @@ on:
 
 jobs:
   tf_code_check:
-    name: Terraform Validation and Build
+    name: Terraform Destroy
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +24,15 @@ jobs:
 
     - name: Terraform destroy
       run: |
-          echo "** Running Terraform Destroy**"
+          echo `pwd`
+          echo "** Running Terraform Init**"
+          terraform init
+
+          echo "** Running Terraform Validate**"
+          terraform validate
+
+          echo "** Running Terraform Plan**"
+          terraform plan
+          
+          echo "** Running Terraform Apply**"
           terraform destroy -auto-approve
