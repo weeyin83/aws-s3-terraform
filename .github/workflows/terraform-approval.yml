@@ -40,4 +40,4 @@ jobs:
           secret: ${{ github.TOKEN }}
           approvers: weeyin83
       - name: Deploy to production
-        run: terraform apply tfplan
+        run: terraform apply -auto-approve
