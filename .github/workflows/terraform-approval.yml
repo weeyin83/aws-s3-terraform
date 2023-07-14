@@ -27,16 +27,16 @@ jobs:
         run: terraform init
 
       - name: Apply Terraform plan
-        run: terraform plan
+        run: terraform plan -out=tfplan
 
-      - name: Get approval
+      - name: Approval step
         id: approval
-        uses: "marvinpinto/action-inquirer@v1.2.0"
+        uses: ChrisCarini/approval-action@v2
         with:
-          question: "Do you approve the Terraform plan?"
-          options: "Approve,Reject"
-          default: "Reject"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          message: "Please review and approve the Terraform plan"
+          reviewers: "weeyin83" # Replace with the GitHub username(s) of the reviewer(s)
 
-      - name: Deploy if approved
-        if: ${{ steps.approval.outputs.answer == 'Approve' }}
-        run: terraform apply -auto-approve
+      - name: Deploy Terraform infrastructure
+        if: steps.approval.outputs.approved == 'true'
+        run: terraform apply tfplan
