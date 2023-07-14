@@ -1,10 +1,10 @@
-name: Terraform Deployment
+name: Terraform Deployment with approval
 
 on:
   workflow_dispatch:
 
 jobs:
-  validate:
+  deploy:
     permissions: write-all
     runs-on: ubuntu-latest
 
