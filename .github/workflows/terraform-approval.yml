@@ -54,4 +54,4 @@ jobs:
           approvers: weeyin83
       
     - name: Deploy to production
-      run: terraform apply tfplan -auto-approve
+      run: terraform apply tfplan
